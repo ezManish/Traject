@@ -41,13 +41,13 @@ export const PulseRail: React.FC = () => {
 
   const getStageColor = (stage: string) => {
     switch (stage) {
-      case 'SEED': return '#5C564E';
-      case 'EMERGING': return '#2F9E44';
-      case 'EXPANDING': return '#E67700';
-      case 'VIRAL': return '#E03131';
-      case 'SATURATION': return '#9C36B5';
-      case 'DECLINING': return '#5C564E';
-      default: return '#5C564E';
+      case 'SEED': return '#64748B';
+      case 'EMERGING': return '#10B981';
+      case 'EXPANDING': return '#F59E0B';
+      case 'VIRAL': return '#EF4444';
+      case 'SATURATION': return '#A855F7';
+      case 'DECLINING': return '#64748B';
+      default: return '#64748B';
     }
   };
 
@@ -57,22 +57,22 @@ export const PulseRail: React.FC = () => {
     <aside className="w-[84px] min-w-[84px] h-screen glass-panel flex flex-col items-center justify-between py-4 select-none z-30 fixed left-0 top-0 border-r border-borderline">
       {/* Brand Icon */}
       <div className="flex flex-col items-center gap-1">
-        <div className="w-12 h-12 rounded-xl bg-white flex flex-col items-center justify-center p-1 border border-borderline shadow-sm cursor-pointer hover:scale-105 transition-transform overflow-hidden">
+        <div className="w-12 h-12 rounded-xl bg-card flex flex-col items-center justify-center p-1.5 border border-borderline shadow-md cursor-pointer hover:scale-105 transition-transform overflow-hidden">
           <img src="/logo.png" alt="TRAJECT Logo" className="w-full h-full object-contain rounded-lg" />
         </div>
-        <span className="text-[9px] font-mono text-charcoal-600 font-bold tracking-wider uppercase mt-0.5">TRAJECT</span>
+        <span className="text-[9px] font-mono text-charcoal-400 font-bold tracking-wider uppercase mt-0.5">TRAJECT</span>
       </div>
 
       {/* Kinetic Seismograph Wave Chamber */}
       <div className="w-14 flex flex-col items-center py-1">
-        <div className="w-full h-[180px] bg-pearl/90 rounded-xl p-1.5 flex flex-col justify-between border border-borderline shadow-inner relative overflow-hidden">
-          <div className="flex items-center justify-between font-mono text-[8px] text-charcoal-600 font-bold px-0.5">
+        <div className="w-full h-[180px] bg-[#0C0E17]/80 rounded-xl p-1.5 flex flex-col justify-between border border-borderline shadow-inner relative overflow-hidden">
+          <div className="flex items-center justify-between font-mono text-[8px] text-charcoal-400 font-bold px-0.5">
             <span className="tracking-tighter">PULSE</span>
-            <Zap className="w-2.5 h-2.5 text-brand-amber" />
+            <Zap className="w-2.5 h-2.5 text-brand-emerald animate-pulse" />
           </div>
           
           <svg className="w-full h-[120px] overflow-visible">
-            <line x1="50%" y1="0" x2="50%" y2="100%" stroke="#D5CFC5" strokeWidth="1" strokeDasharray="2,2" />
+            <line x1="50%" y1="0" x2="50%" y2="100%" stroke="rgba(255,255,255,0.08)" strokeWidth="1" strokeDasharray="2,2" />
             
             {points && (
               <polyline
@@ -81,6 +81,7 @@ export const PulseRail: React.FC = () => {
                 strokeWidth="2.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
+                style={{ filter: `drop-shadow(0 0 6px ${currentColor}80)` }}
                 points={points}
               />
             )}
@@ -91,13 +92,14 @@ export const PulseRail: React.FC = () => {
                 cy={(activeTrendHistory.length - 1) * (120 / Math.max(1, activeTrendHistory.length - 1))}
                 r="3.5"
                 fill={currentColor}
-                stroke="#FFFFFF"
+                stroke="#F8FAFC"
                 strokeWidth="2"
+                style={{ filter: `drop-shadow(0 0 8px ${currentColor})` }}
               />
             )}
           </svg>
 
-          <div className="text-center font-mono text-[10px] font-bold text-charcoal-900 bg-white/90 rounded-md py-0.5 border border-borderline shadow-sm">
+          <div className="text-center font-mono text-[10px] font-bold text-charcoal-950 bg-card rounded-md py-0.5 border border-borderline shadow-sm">
             {latestScore.toFixed(0)} <span className="text-[7px] text-charcoal-400 font-normal">TS</span>
           </div>
         </div>
@@ -115,8 +117,8 @@ export const PulseRail: React.FC = () => {
               title={item.label}
               className={`w-14 h-11 rounded-xl flex flex-col items-center justify-center transition-all duration-200 relative ${
                 isActive
-                  ? 'bg-charcoal-950 text-white font-bold shadow-md scale-105'
-                  : 'text-charcoal-600 hover:text-charcoal-950 hover:bg-white/80'
+                  ? 'bg-brand-emerald text-charcoal-950 font-bold shadow-neon-emerald scale-105'
+                  : 'text-charcoal-400 hover:text-charcoal-950 hover:bg-white/10'
               }`}
             >
               <Icon className="w-4 h-4" />
