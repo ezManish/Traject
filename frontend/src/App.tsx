@@ -19,7 +19,7 @@ export const App: React.FC = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       fetchDashboardData();
-    }, 2500);
+    }, 1000);
     return () => clearInterval(interval);
   }, [fetchDashboardData]);
 

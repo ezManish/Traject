@@ -1,5 +1,6 @@
 import asyncio
 import json
+import os
 from pathlib import Path
 from typing import List, Dict, Any, Optional
 from sqlmodel import Session, select, delete
@@ -10,19 +11,42 @@ from app.services.trend import calculate_trend_score_for_topic
 from app.services.narrative import evaluate_narrative_for_topic
 
 DATASET_PATH = Path(__file__).resolve().parent.parent / "data" / "replay_dataset.json"
+ENV_PATH = Path(__file__).resolve().parent.parent / ".env"
 
 class ReplayManager:
     def __init__(self):
         self.is_running: bool = False
         self.is_completed: bool = False
         self.current_tick: int = 0
-        self.tick_seconds: float = settings.replay_tick_seconds
         self.current_timestamp: Optional[str] = None
         self._dataset: List[Dict[str, Any]] = []
         self._max_tick: int = 0
         self._task: Optional[asyncio.Task] = None
         self.load_dataset()
         self.sync_with_db()
+
+    @property
+    def tick_seconds(self) -> float:
+        """Dynamically read the latest REPLAY_TICK_SECONDS directly from the .env file on disk."""
+        if ENV_PATH.exists():
+            try:
+                with open(ENV_PATH, "r", encoding="utf-8") as f:
+                    for line in f:
+                        line = line.strip()
+                        if line.startswith("REPLAY_TICK_SECONDS="):
+                            val = line.split("=", 1)[1].split("#")[0].strip()
+                            if val:
+                                return float(val)
+            except Exception:
+                pass
+
+        env_val = os.getenv("REPLAY_TICK_SECONDS")
+        if env_val:
+            try:
+                return float(env_val)
+            except ValueError:
+                pass
+        return float(settings.replay_tick_seconds)
 
     def load_dataset(self):
         """Load synthetic dataset from JSON file."""
@@ -161,11 +185,27 @@ class ReplayManager:
             "is_completed": self.is_completed
         }
 
+    def jump_to_tick(self, target_tick: int) -> Dict[str, Any]:
+        """Jump or scrub directly to any tick between 0 and max_tick."""
+        target_tick = max(0, min(self._max_tick, target_tick))
+        self.pause()
+        if target_tick < self.current_tick or target_tick == 0:
+            self.reset()
+        
+        while self.current_tick < target_tick:
+            self.step_tick()
+
+        return {
+            "current_tick": self.current_tick,
+            "is_completed": self.is_completed
+        }
+
     async def _run_loop(self):
-        """Continuous ticker background loop."""
+        """Continuous ticker background loop using dynamic tick delay directly from .env file."""
         try:
             while self.is_running and not self.is_completed:
-                await asyncio.sleep(self.tick_seconds)
+                delay = self.tick_seconds
+                await asyncio.sleep(delay)
                 if not self.is_running:
                     break
                 self.step_tick()
@@ -198,7 +238,7 @@ class ReplayManager:
             self._task = None
 
     def get_state(self) -> ReplayStateResponse:
-        """Return the current replay engine state."""
+        """Return the current replay engine state with dynamic tick_seconds."""
         with Session(engine) as session:
             count = len(session.exec(select(EventRecord)).all())
 
