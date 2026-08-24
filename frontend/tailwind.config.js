@@ -7,38 +7,47 @@ export default {
   theme: {
     extend: {
       colors: {
-        canvas: '#F7F5F0',       // Archival technical alabaster
-        surface: '#FFFFFF',      // Pure surface card
-        subtle: '#EFECE5',       // Recessed data well / badge ground
-        hairline: '#E2DDD5',     // 1px architectural hairline
-        strongline: '#C8C1B5',   // Strong focus border
+        porcelain: '#FBFBFA',
+        pearl: '#F4F4F0',
+        card: '#FFFFFF',
+        borderline: 'rgba(25, 23, 21, 0.08)',
+        subtleborder: 'rgba(25, 23, 21, 0.04)',
         charcoal: {
-          900: '#191715',        // Primary text (high contrast AAA)
-          700: '#3D3833',        // Headings
-          500: '#5C564E',        // Secondary metadata
-          400: '#8C8479',        // Captions / mono
-          200: '#D5CFC6',        // Dividers
+          950: '#0F0E0D',
+          900: '#1A1816',
+          800: '#2E2B27',
+          600: '#5C564E',
+          400: '#8C8478',
+          200: '#D5CFC5',
         },
-        signal: {
-          seed: '#6C6358',       // Neutral Slate
-          emerging: '#2B8A3E',   // Forest Pine
-          expanding: '#C25E00',  // Warm Ochre
-          viral: '#C92A2A',      // High-voltage Crimson
-          saturation: '#862E9C', // Deep Plum
-          declining: '#5C564E',  // Muted Slate
-          gold: '#975A16',       // Deep Brass / Receipt mark
-          teal: '#099268',       // Spruce Teal (Positive)
-          hot: '#C92A2A',        // Crimson (Negative)
+        brand: {
+          crimson: '#E03131',
+          amber: '#F59F00',
+          emerald: '#2F9E44',
+          indigo: '#3B5BDB',
+          cyan: '#1098AD',
+          gold: '#C98A0C',
         }
       },
       fontFamily: {
-        display: ['Public Sans', 'sans-serif'],
+        display: ['Fraunces', 'Georgia', 'serif'],
+        sans: ['Public Sans', 'sans-serif'],
         mono: ['IBM Plex Mono', 'monospace'],
-        body: ['Public Sans', 'sans-serif'],
       },
       boxShadow: {
-        'subtle': '0 1px 2px 0 rgba(25, 23, 21, 0.04)',
-        'raised': '0 2px 6px -1px rgba(25, 23, 21, 0.06), 0 1px 3px -1px rgba(25, 23, 21, 0.04)',
+        'glass': '0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.02)',
+        'float': '0 12px 36px -4px rgba(0, 0, 0, 0.08), 0 4px 12px -2px rgba(0, 0, 0, 0.03)',
+        'inset-glass': 'inset 0 1px 2px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 2px 0 rgba(0, 0, 0, 0.03)',
+      },
+      animation: {
+        'pulse-subtle': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'radar-sweep': 'radar 6s linear infinite',
+      },
+      keyframes: {
+        radar: {
+          '0%': { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(360deg)' },
+        }
       }
     },
   },

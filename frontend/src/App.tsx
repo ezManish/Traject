@@ -43,14 +43,14 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-canvas text-charcoal-900 flex">
-      {/* 72px Signature Pulse Rail */}
+    <div className="min-h-screen w-full bg-porcelain text-charcoal-900 flex selection:bg-brand-amber/20 overflow-x-hidden">
+      {/* 84px Precision Pulse Rail */}
       <PulseRail />
 
-      {/* Main Content Area (offset by 72px) */}
-      <div className="flex-1 ml-[72px] flex flex-col min-h-screen">
+      {/* Main Content Area (offset by 84px) */}
+      <div className="flex-1 ml-[84px] flex flex-col min-h-screen w-[calc(100vw-84px)] max-w-[calc(100vw-84px)]">
         <TopHeader />
-        <main className="flex-1 pb-16 bg-canvas">
+        <main className="flex-1 pb-16 w-full">
           {renderActiveScreen()}
         </main>
       </div>

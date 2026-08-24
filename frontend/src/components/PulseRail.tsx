@@ -1,14 +1,14 @@
 import React from 'react';
 import { useTrajectStore } from '../store/useTrajectStore';
 import type { ScreenTab } from '../store/useTrajectStore';
-import { LayoutDashboard, TrendingUp, BookOpen, Share2, Users, FileText } from 'lucide-react';
+import { LayoutDashboard, TrendingUp, BookOpen, Share2, Users, FileText, Zap } from 'lucide-react';
 
 const NAV_ITEMS: Array<{ id: ScreenTab; label: string; icon: React.ComponentType<{ className?: string }> }> = [
   { id: 'executive', label: 'EXEC', icon: LayoutDashboard },
   { id: 'trend', label: 'TREND', icon: TrendingUp },
-  { id: 'narrative', label: 'STORY', icon: BookOpen },
-  { id: 'network', label: 'GRAPH', icon: Share2 },
-  { id: 'audience', label: 'AUDIENCE', icon: Users },
+  { id: 'narrative', label: 'JOURNEY', icon: BookOpen },
+  { id: 'network', label: 'RADAR', icon: Share2 },
+  { id: 'audience', label: 'DEMO', icon: Users },
   { id: 'ai_analyst', label: 'ANALYST', icon: FileText },
 ];
 
@@ -17,15 +17,15 @@ export const PulseRail: React.FC = () => {
 
   const points = React.useMemo(() => {
     if (!activeTrendHistory || activeTrendHistory.length === 0) return '';
-    const height = 180;
-    const width = 44;
+    const height = 140;
+    const width = 48;
     const maxScore = 100;
     const stepY = height / Math.max(1, activeTrendHistory.length - 1);
 
     return activeTrendHistory
       .map((item, idx) => {
-        const x = (item.composite_score / maxScore) * (width - 12) + 6;
-        const y = idx * stepY + 10;
+        const x = (item.composite_score / maxScore) * (width - 14) + 7;
+        const y = idx * stepY + 6;
         return `${x.toFixed(1)},${y.toFixed(1)}`;
       })
       .join(' ');
@@ -39,41 +39,45 @@ export const PulseRail: React.FC = () => {
     ? activeTrendHistory[activeTrendHistory.length - 1].lifecycle_stage
     : 'SEED';
 
-  const getStageStrokeColor = (stage: string) => {
+  const getStageColor = (stage: string) => {
     switch (stage) {
-      case 'SEED': return '#6C6358';
-      case 'EMERGING': return '#2B8A3E';
-      case 'EXPANDING': return '#C25E00';
-      case 'VIRAL': return '#C92A2A';
-      case 'SATURATION': return '#862E9C';
+      case 'SEED': return '#5C564E';
+      case 'EMERGING': return '#2F9E44';
+      case 'EXPANDING': return '#E67700';
+      case 'VIRAL': return '#E03131';
+      case 'SATURATION': return '#9C36B5';
       case 'DECLINING': return '#5C564E';
-      default: return '#6C6358';
+      default: return '#5C564E';
     }
   };
 
+  const currentColor = getStageColor(latestStage);
+
   return (
-    <aside className="w-[72px] min-w-[72px] h-screen bg-surface border-r border-hairline flex flex-col items-center justify-between py-4 select-none z-30 fixed left-0 top-0 shadow-subtle">
-      {/* Brand Monogram */}
+    <aside className="w-[84px] min-w-[84px] h-screen glass-panel flex flex-col items-center justify-between py-4 select-none z-30 fixed left-0 top-0 border-r border-borderline">
+      {/* Brand Icon (Clean without yellow dot) */}
       <div className="flex flex-col items-center gap-1">
-        <div className="w-8 h-8 rounded bg-charcoal-900 flex items-center justify-center text-surface font-bold text-sm font-mono tracking-tighter">
-          TR
+        <div className="w-12 h-12 rounded-xl bg-white flex flex-col items-center justify-center p-1 border border-borderline shadow-sm cursor-pointer hover:scale-105 transition-transform overflow-hidden">
+          <img src="/logo.png" alt="TRAJECT Logo" className="w-full h-full object-contain rounded-lg" />
         </div>
-        <span className="font-mono text-[9px] text-charcoal-500 font-semibold tracking-wider">NTRO</span>
+        <span className="text-[9px] font-mono text-charcoal-600 font-bold tracking-wider uppercase mt-0.5">TRAJECT</span>
       </div>
 
-      {/* Seismograph Instrument Trace */}
-      <div className="w-12 flex flex-col items-center my-auto py-2">
-        <div className="w-full h-[190px] bg-subtle border border-hairline rounded p-1 flex flex-col justify-between">
-          <span className="font-mono text-[8px] text-charcoal-500 font-medium tracking-tight">INTENSITY</span>
+      {/* Kinetic Seismograph Wave Chamber */}
+      <div className="w-14 flex flex-col items-center py-1">
+        <div className="w-full h-[180px] bg-pearl/90 rounded-xl p-1.5 flex flex-col justify-between border border-borderline shadow-inner relative overflow-hidden">
+          <div className="flex items-center justify-between font-mono text-[8px] text-charcoal-600 font-bold px-0.5">
+            <span className="tracking-tighter">PULSE</span>
+            <Zap className="w-2.5 h-2.5 text-brand-amber" />
+          </div>
           
-          <svg className="w-full h-[140px] overflow-visible">
-            {/* Center reference grid line */}
-            <line x1="50%" y1="0" x2="50%" y2="100%" stroke="#D5CFC6" strokeWidth="1" strokeDasharray="2,2" />
+          <svg className="w-full h-[120px] overflow-visible">
+            <line x1="50%" y1="0" x2="50%" y2="100%" stroke="#D5CFC5" strokeWidth="1" strokeDasharray="2,2" />
             
             {points && (
               <polyline
                 fill="none"
-                stroke={getStageStrokeColor(latestStage)}
+                stroke={currentColor}
                 strokeWidth="2.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -83,24 +87,24 @@ export const PulseRail: React.FC = () => {
 
             {activeTrendHistory.length > 0 && (
               <circle
-                cx={(latestScore / 100) * 32 + 6}
-                cy={(activeTrendHistory.length - 1) * (140 / Math.max(1, activeTrendHistory.length - 1))}
+                cx={(latestScore / 100) * 34 + 7}
+                cy={(activeTrendHistory.length - 1) * (120 / Math.max(1, activeTrendHistory.length - 1))}
                 r="3.5"
-                fill={getStageStrokeColor(latestStage)}
+                fill={currentColor}
                 stroke="#FFFFFF"
-                strokeWidth="1.5"
+                strokeWidth="2"
               />
             )}
           </svg>
 
-          <div className="text-center font-mono text-[10px] font-bold text-charcoal-900">
-            {latestScore.toFixed(0)}
+          <div className="text-center font-mono text-[10px] font-bold text-charcoal-900 bg-white/90 rounded-md py-0.5 border border-borderline shadow-sm">
+            {latestScore.toFixed(0)} <span className="text-[7px] text-charcoal-400 font-normal">TS</span>
           </div>
         </div>
       </div>
 
-      {/* Navigation Notches */}
-      <nav className="flex flex-col items-center gap-1 w-full px-2">
+      {/* Fluid Navigation Deck */}
+      <nav className="flex flex-col items-center gap-1.5 w-full px-2">
         {NAV_ITEMS.map((item) => {
           const Icon = item.icon;
           const isActive = activeTab === item.id;
@@ -109,14 +113,14 @@ export const PulseRail: React.FC = () => {
               key={item.id}
               onClick={() => setActiveTab(item.id)}
               title={item.label}
-              className={`w-12 h-10 rounded flex flex-col items-center justify-center transition-colors relative ${
+              className={`w-14 h-11 rounded-xl flex flex-col items-center justify-center transition-all duration-200 relative ${
                 isActive
-                  ? 'bg-subtle text-charcoal-900 font-semibold border-l-2 border-charcoal-900'
-                  : 'text-charcoal-500 hover:text-charcoal-900 hover:bg-subtle/60'
+                  ? 'bg-charcoal-950 text-white font-bold shadow-md scale-105'
+                  : 'text-charcoal-600 hover:text-charcoal-950 hover:bg-white/80'
               }`}
             >
-              <Icon className="w-3.5 h-3.5" />
-              <span className="font-mono text-[8px] uppercase tracking-tight mt-0.5">
+              <Icon className="w-4 h-4" />
+              <span className="font-mono text-[8px] uppercase tracking-wider mt-0.5">
                 {item.label}
               </span>
             </button>
@@ -124,10 +128,10 @@ export const PulseRail: React.FC = () => {
         })}
       </nav>
 
-      {/* Bottom Tick Readout */}
-      <div className="text-center pt-2 border-t border-hairline w-12">
-        <span className="font-mono text-[8px] text-charcoal-400 block font-medium">TICK</span>
-        <span className="font-mono text-xs font-bold text-signal-gold">
+      {/* Bottom Replay Telemetry Capsule */}
+      <div className="text-center pt-2 border-t border-borderline w-14">
+        <span className="font-mono text-[8px] text-charcoal-400 block font-bold tracking-widest uppercase">TICK</span>
+        <span className="font-mono text-xs font-bold text-brand-amber">
           {replayState ? `${replayState.current_tick}/${replayState.total_ticks}` : '0/10'}
         </span>
       </div>

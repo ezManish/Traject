@@ -63,38 +63,41 @@ export const AIAnalyst: React.FC = () => {
   };
 
   return (
-    <div className="p-8 space-y-6 max-w-7xl mx-auto">
+    <div className="p-8 space-y-6 max-w-[1600px] mx-auto">
       {/* Header */}
-      <div className="border-b border-hairline pb-4 flex items-baseline justify-between">
+      <div className="border-b border-borderline pb-5 flex items-baseline justify-between">
         <div>
-          <span className="font-mono text-xs text-signal-gold uppercase tracking-widest block font-bold">
-            Console 07 / AI Intelligence Synthesis
-          </span>
-          <h1 className="font-display font-bold text-3xl text-charcoal-900 tracking-tight mt-1">
+          <div className="flex items-center gap-2 font-mono text-[11px] text-brand-amber font-bold uppercase tracking-wider">
+            <FileSearch className="w-3.5 h-3.5" />
+            <span>AI SYNTHESIS STUDIO</span>
+            <span>/</span>
+            <span>EVIDENCE-GROUNDED REASONING</span>
+          </div>
+          <h1 className="font-display font-bold text-4xl text-charcoal-950 tracking-tight mt-1">
             Grounded AI Analyst
           </h1>
-          <p className="text-charcoal-500 text-sm mt-1">
+          <p className="text-charcoal-600 text-sm mt-1 font-body">
             Evidence-grounded analytical synthesis powered by NVIDIA NIM inference and deterministic scoring telemetry.
           </p>
         </div>
-        <div className="font-mono text-xs text-emerald-900 bg-emerald-50 px-3 py-1 rounded border border-emerald-300 flex items-center gap-1.5 font-bold">
-          <ShieldCheck className="w-3.5 h-3.5 text-signal-teal" />
+        <div className="font-mono text-xs text-emerald-950 bg-emerald-50 px-4 py-2 rounded-xl border border-emerald-300 flex items-center gap-2 font-bold shadow-sm">
+          <ShieldCheck className="w-4 h-4 text-brand-emerald" />
           <span>ZERO HALLUCINATION PROTOCOL</span>
         </div>
       </div>
 
       {/* Suggested Inquiries */}
-      <div className="bg-surface border border-hairline p-4 rounded shadow-subtle space-y-2">
-        <span className="font-mono text-xs text-charcoal-700 uppercase flex items-center gap-1.5 font-bold">
-          <HelpCircle className="w-3.5 h-3.5 text-signal-gold" /> Suggested Analytical Inquiries
+      <div className="glass-panel p-5 rounded-2xl shadow-glass space-y-2.5">
+        <span className="font-mono text-xs text-charcoal-800 uppercase flex items-center gap-2 font-bold">
+          <HelpCircle className="w-4 h-4 text-brand-amber" /> Suggested Analytical Inquiries
         </span>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2.5">
           {SUGGESTED_PROMPTS.map((p, idx) => (
             <button
               key={idx}
               onClick={() => handleAsk(p)}
               disabled={isLoading}
-              className="bg-subtle hover:bg-hairline text-charcoal-900 text-xs font-mono px-3 py-1.5 rounded border border-hairline transition-colors text-left disabled:opacity-50 font-medium"
+              className="bg-pearl/90 hover:bg-white text-charcoal-950 text-xs font-mono px-4 py-2 rounded-xl border border-borderline transition-all text-left disabled:opacity-50 font-semibold shadow-sm hover:scale-[1.02]"
             >
               "{p}"
             </button>
@@ -103,28 +106,28 @@ export const AIAnalyst: React.FC = () => {
       </div>
 
       {/* Dominant Panel: Evidence-Grounded Briefing Messages */}
-      <div className="bg-surface border border-hairline p-6 rounded shadow-subtle space-y-4 min-h-[380px] flex flex-col justify-between">
-        <div className="space-y-4 max-h-[460px] overflow-y-auto pr-1">
+      <div className="glass-panel p-6 rounded-2xl shadow-glass space-y-4 min-h-[400px] flex flex-col justify-between">
+        <div className="space-y-4 max-h-[480px] overflow-y-auto pr-1">
           {messages.map((m, idx) => (
             <div
               key={idx}
-              className={`p-4 rounded text-sm ${
+              className={`p-4 rounded-2xl text-sm ${
                 m.role === 'user'
-                  ? 'bg-subtle border border-hairline ml-12 text-charcoal-900 font-mono'
-                  : 'bg-canvas border-l-4 border-l-signal-expanding border border-hairline mr-12 text-charcoal-900 font-body space-y-2'
+                  ? 'bg-pearl border border-borderline ml-12 text-charcoal-950 font-mono shadow-sm'
+                  : 'bg-white border-l-4 border-l-brand-expanding border border-borderline mr-12 text-charcoal-900 font-body space-y-2 shadow-sm'
               }`}
             >
-              <div className="flex items-center justify-between font-mono text-xs text-charcoal-500 mb-1">
-                <span className="font-semibold">{m.role === 'user' ? 'ANALYST INQUIRY' : 'TRAJECT INTELLIGENCE BRIEFING'}</span>
+              <div className="flex items-center justify-between font-mono text-xs text-charcoal-500 mb-1 pb-1 border-b border-borderline">
+                <span className="font-bold">{m.role === 'user' ? 'ANALYST INQUIRY' : 'TRAJECT INTELLIGENCE BRIEFING'}</span>
                 {m.confidence && (
-                  <span className="text-signal-gold font-bold">CONFIDENCE: {(m.confidence * 100).toFixed(0)}% · {m.provider}</span>
+                  <span className="text-brand-amber font-bold">CONFIDENCE: {(m.confidence * 100).toFixed(0)}% · {m.provider}</span>
                 )}
               </div>
-              <p className="leading-relaxed">{m.text}</p>
+              <p className="leading-relaxed font-body text-charcoal-950">{m.text}</p>
               {m.evidence && m.evidence.length > 0 && (
-                <div className="font-mono text-xs text-amber-900 bg-amber-50 p-2 rounded border border-amber-300 flex items-center gap-2">
-                  <FileSearch className="w-3.5 h-3.5 text-signal-gold" />
-                  <span className="font-bold">CITED RECEIPTS:</span>
+                <div className="font-mono text-xs text-amber-950 bg-amber-50 p-2.5 rounded-xl border border-amber-300 flex items-center gap-2 font-bold shadow-sm">
+                  <FileSearch className="w-3.5 h-3.5 text-brand-amber" />
+                  <span>CITED RECEIPTS:</span>
                   <span>[{m.evidence.join(', ')}]</span>
                 </div>
               )}
@@ -132,15 +135,15 @@ export const AIAnalyst: React.FC = () => {
           ))}
 
           {isLoading && (
-            <div className="bg-canvas border-l-4 border-l-signal-expanding border border-hairline mr-12 p-4 rounded font-mono text-xs text-charcoal-700 flex items-center gap-2">
-              <Loader2 className="w-4 h-4 animate-spin text-signal-expanding" />
+            <div className="bg-white border-l-4 border-l-brand-expanding border border-borderline mr-12 p-4 rounded-2xl font-mono text-xs text-charcoal-700 flex items-center gap-2.5 shadow-sm">
+              <Loader2 className="w-4 h-4 animate-spin text-brand-amber" />
               <span>Querying NVIDIA NIM endpoint with structured evidence payload...</span>
             </div>
           )}
         </div>
 
         {/* Input Bar */}
-        <div className="pt-4 border-t border-hairline flex gap-2">
+        <div className="pt-4 border-t border-borderline flex gap-2.5">
           <input
             type="text"
             value={question}
@@ -148,12 +151,12 @@ export const AIAnalyst: React.FC = () => {
             onKeyDown={(e) => e.key === 'Enter' && handleAsk(question)}
             disabled={isLoading}
             placeholder={`Ask an evidence-backed inquiry about ${activeTopic}...`}
-            className="flex-1 bg-subtle border border-hairline rounded px-4 py-2 text-sm text-charcoal-900 font-body focus:border-charcoal-900 focus:outline-none placeholder:text-charcoal-400 disabled:opacity-50"
+            className="flex-1 bg-pearl border border-borderline rounded-xl px-4 py-2.5 text-sm text-charcoal-950 font-body focus:border-charcoal-950 focus:outline-none placeholder:text-charcoal-400 disabled:opacity-50 font-medium shadow-inner"
           />
           <button
             onClick={() => handleAsk(question)}
             disabled={isLoading || !question.trim()}
-            className="bg-charcoal-900 hover:bg-charcoal-700 text-surface font-mono text-xs font-semibold px-5 py-2 rounded flex items-center gap-1.5 transition-colors disabled:opacity-40 shadow-subtle"
+            className="bg-charcoal-950 hover:bg-charcoal-800 text-white font-mono text-xs font-bold px-6 py-2.5 rounded-xl flex items-center gap-2 transition-all disabled:opacity-40 shadow-sm hover:scale-105"
           >
             <span>INQUIRE</span>
             <Send className="w-3.5 h-3.5" />
