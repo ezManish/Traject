@@ -2,66 +2,74 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --ink-base: #150F18;
-  --ink-surface: #1F1722;
-  --ink-raised: #271D2B;
-  --ink-border: #3A2C3F;
-  --bone: #F4EBF1;
-  --mauve-400: #B7A2B8;
-  --mauve-600: #7C6B7E;
+@layer base {
+  :root {
+    --bg-canvas: #F7F5F0;
+    --bg-surface: #FFFFFF;
+    --bg-subtle: #EFECE5;
+    --border-hairline: #E2DDD5;
+    --text-primary: #191715;
+    --text-secondary: #5C564E;
+    --text-muted: #8C8479;
 
-  --stage-seed: #8C6B84;
-  --stage-emerging: #B4508A;
-  --stage-expanding: #D42E82;
-  --stage-viral: #FF3D97;
-  --stage-saturation: #A61E6B;
-  --stage-declining: #6B4A63;
-  --stage-dormant: #3A2E39;
+    --signal-seed: #6C6358;
+    --signal-emerging: #2B8A3E;
+    --signal-expanding: #C25E00;
+    --signal-viral: #C92A2A;
+    --signal-saturation: #862E9C;
+    --signal-declining: #5C564E;
+    --signal-gold: #975A16;
+    --signal-teal: #099268;
+  }
 
-  --evidence-gold: #E3A542;
-  --calm-teal: #5FA8A0;
-
-  --font-display: 'Fraunces', serif;
-  --font-mono: 'IBM Plex Mono', monospace;
-  --font-body: 'Public Sans', sans-serif;
+  body {
+    background-color: var(--bg-canvas);
+    color: var(--text-primary);
+    font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 }
 
-body {
-  background-color: var(--ink-base);
-  color: var(--bone);
-  font-family: var(--font-body);
-  margin: 0;
-  padding: 0;
+/* Precision Light-Mode Stage Badges */
+.badge-stage-seed {
+  background-color: #F1EFEA;
+  color: #5C564E;
+  border: 1px solid #D5CFC6;
 }
 
-/* Custom scrollbars */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: var(--ink-base);
-}
-::-webkit-scrollbar-thumb {
-  background: var(--ink-border);
-  border-radius: 3px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--mauve-600);
+.badge-stage-emerging {
+  background-color: #EBFBEE;
+  color: #2B8A3E;
+  border: 1px solid #B2F2BB;
 }
 
-/* Focus rings with evidence gold */
-*:focus-visible {
-  outline: 2px solid var(--evidence-gold);
-  outline-offset: 2px;
+.badge-stage-expanding {
+  background-color: #FFF4E6;
+  color: #C25E00;
+  border: 1px solid #FFD8A8;
 }
 
-/* Helper utility for stage badge coloring */
-.stage-badge-seed { background-color: var(--stage-seed); color: var(--ink-base); }
-.stage-badge-emerging { background-color: var(--stage-emerging); color: var(--ink-base); }
-.stage-badge-expanding { background-color: var(--stage-expanding); color: var(--ink-base); }
-.stage-badge-viral { background-color: var(--stage-viral); color: var(--ink-base); }
-.stage-badge-saturation { background-color: var(--stage-saturation); color: var(--bone); }
-.stage-badge-declining { background-color: var(--stage-declining); color: var(--bone); }
-.stage-badge-dormant { background-color: var(--stage-dormant); color: var(--mauve-400); }
+.badge-stage-viral {
+  background-color: #FFF5F5;
+  color: #C92A2A;
+  border: 1px solid #FFC9C9;
+}
+
+.badge-stage-saturation {
+  background-color: #F8F0FC;
+  color: #862E9C;
+  border: 1px solid #E599F7;
+}
+
+.badge-stage-declining {
+  background-color: #F1EFEA;
+  color: #5C564E;
+  border: 1px solid #D5CFC6;
+}
+
+.badge-stage-dormant {
+  background-color: #EFECE5;
+  color: #8C8479;
+  border: 1px solid #D5CFC6;
+}
