@@ -27,7 +27,7 @@ export const ExecutiveDashboard: React.FC = () => {
   return (
     <div className="p-8 space-y-6 max-w-[1600px] mx-auto">
       {/* Console Header */}
-      <div className="flex items-baseline justify-between border-b border-borderline pb-5">
+      <div className="border-b border-borderline pb-5">
         <div>
           <div className="flex items-center gap-2 font-mono text-[11px] text-brand-amber font-bold uppercase tracking-wider">
             <RadioTower className="w-3.5 h-3.5" />
@@ -41,11 +41,6 @@ export const ExecutiveDashboard: React.FC = () => {
           <p className="text-charcoal-600 text-sm mt-1 font-body">
             Real-time deterministic narrative telemetry across X and Telegram live streams.
           </p>
-        </div>
-
-        <div className="flex items-center gap-2 font-mono text-xs text-emerald-950 bg-emerald-50 px-4 py-2 rounded-xl border border-emerald-300 font-bold shadow-sm">
-          <Activity className="w-4 h-4 text-brand-emerald animate-pulse" />
-          <span>LIVE TELEMETRY STREAM</span>
         </div>
       </div>
 
