@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --ink-base: #150F18;
+  --ink-surface: #1F1722;
+  --ink-raised: #271D2B;
+  --ink-border: #3A2C3F;
+  --bone: #F4EBF1;
+  --mauve-400: #B7A2B8;
+  --mauve-600: #7C6B7E;
+
+  --stage-seed: #8C6B84;
+  --stage-emerging: #B4508A;
+  --stage-expanding: #D42E82;
+  --stage-viral: #FF3D97;
+  --stage-saturation: #A61E6B;
+  --stage-declining: #6B4A63;
+  --stage-dormant: #3A2E39;
+
+  --evidence-gold: #E3A542;
+  --calm-teal: #5FA8A0;
+
+  --font-display: 'Fraunces', serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+  --font-body: 'Public Sans', sans-serif;
+}
+
+body {
+  background-color: var(--ink-base);
+  color: var(--bone);
+  font-family: var(--font-body);
+  margin: 0;
+  padding: 0;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--ink-base);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--ink-border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--mauve-600);
+}
+
+/* Focus rings with evidence gold */
+*:focus-visible {
+  outline: 2px solid var(--evidence-gold);
+  outline-offset: 2px;
+}
+
+/* Helper utility for stage badge coloring */
+.stage-badge-seed { background-color: var(--stage-seed); color: var(--ink-base); }
+.stage-badge-emerging { background-color: var(--stage-emerging); color: var(--ink-base); }
+.stage-badge-expanding { background-color: var(--stage-expanding); color: var(--ink-base); }
+.stage-badge-viral { background-color: var(--stage-viral); color: var(--ink-base); }
+.stage-badge-saturation { background-color: var(--stage-saturation); color: var(--bone); }
+.stage-badge-declining { background-color: var(--stage-declining); color: var(--bone); }
+.stage-badge-dormant { background-color: var(--stage-dormant); color: var(--mauve-400); }
