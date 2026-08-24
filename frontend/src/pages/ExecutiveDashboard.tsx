@@ -43,9 +43,9 @@ export const ExecutiveDashboard: React.FC = () => {
           </p>
         </div>
 
-        <div className="flex items-center gap-3 font-mono text-xs text-charcoal-700 bg-white/90 px-4 py-2 rounded-xl border border-borderline shadow-sm">
-          <Activity className="w-4 h-4 text-brand-emerald" />
-          <span>REPLAY TICK: <strong className="text-charcoal-950 font-bold">{replayState?.current_tick || 0} / {replayState?.total_ticks || 10}</strong></span>
+        <div className="flex items-center gap-2 font-mono text-xs text-emerald-950 bg-emerald-50 px-4 py-2 rounded-xl border border-emerald-300 font-bold shadow-sm">
+          <Activity className="w-4 h-4 text-brand-emerald animate-pulse" />
+          <span>LIVE TELEMETRY STREAM</span>
         </div>
       </div>
 

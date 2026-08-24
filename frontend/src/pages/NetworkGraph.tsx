@@ -155,8 +155,8 @@ export const NetworkGraph: React.FC = () => {
           {/* Time Scrubber */}
           <div className="border-t border-borderline pt-3 flex items-center justify-between font-mono text-xs">
             <div className="flex items-center gap-2">
-              <span className="text-charcoal-500 font-bold uppercase">REPLAY SCRUBBER:</span>
-              <span className="text-brand-amber font-bold">TICK {replayState?.current_tick || 0} OF {replayState?.total_ticks || 10}</span>
+              <span className="text-charcoal-500 font-bold uppercase">NETWORK TIMELINE:</span>
+              <span className="text-brand-amber font-bold">PROPAGATION TRACE</span>
             </div>
 
             <div className="flex items-center gap-1 bg-pearl p-1 rounded-xl border border-borderline">

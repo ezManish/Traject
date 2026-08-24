@@ -13,7 +13,7 @@ const NAV_ITEMS: Array<{ id: ScreenTab; label: string; icon: React.ComponentType
 ];
 
 export const PulseRail: React.FC = () => {
-  const { activeTab, setActiveTab, activeTrendHistory, replayState } = useTrajectStore();
+  const { activeTab, setActiveTab, activeTrendHistory } = useTrajectStore();
 
   const points = React.useMemo(() => {
     if (!activeTrendHistory || activeTrendHistory.length === 0) return '';
@@ -55,7 +55,7 @@ export const PulseRail: React.FC = () => {
 
   return (
     <aside className="w-[84px] min-w-[84px] h-screen glass-panel flex flex-col items-center justify-between py-4 select-none z-30 fixed left-0 top-0 border-r border-borderline">
-      {/* Brand Icon (Clean without yellow dot) */}
+      {/* Brand Icon */}
       <div className="flex flex-col items-center gap-1">
         <div className="w-12 h-12 rounded-xl bg-white flex flex-col items-center justify-center p-1 border border-borderline shadow-sm cursor-pointer hover:scale-105 transition-transform overflow-hidden">
           <img src="/logo.png" alt="TRAJECT Logo" className="w-full h-full object-contain rounded-lg" />
@@ -103,7 +103,7 @@ export const PulseRail: React.FC = () => {
         </div>
       </div>
 
-      {/* Fluid Navigation Deck */}
+      {/* Navigation Deck */}
       <nav className="flex flex-col items-center gap-1.5 w-full px-2">
         {NAV_ITEMS.map((item) => {
           const Icon = item.icon;
@@ -128,13 +128,8 @@ export const PulseRail: React.FC = () => {
         })}
       </nav>
 
-      {/* Bottom Replay Telemetry Capsule */}
-      <div className="text-center pt-2 border-t border-borderline w-14">
-        <span className="font-mono text-[8px] text-charcoal-400 block font-bold tracking-widest uppercase">TICK</span>
-        <span className="font-mono text-xs font-bold text-brand-amber">
-          {replayState ? `${replayState.current_tick}/${replayState.total_ticks}` : '0/10'}
-        </span>
-      </div>
+      {/* Clean bottom anchor */}
+      <div className="w-12 h-2" />
     </aside>
   );
 };

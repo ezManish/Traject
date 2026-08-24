@@ -22,6 +22,7 @@ class ReplayManager:
         self._max_tick: int = 0
         self._task: Optional[asyncio.Task] = None
         self.load_dataset()
+        self.sync_with_db()
 
     def load_dataset(self):
         """Load synthetic dataset from JSON file."""
@@ -33,6 +34,25 @@ class ReplayManager:
         else:
             self._dataset = []
             self._max_tick = 0
+
+    def sync_with_db(self):
+        """Sync internal tick counter with database records on startup."""
+        try:
+            with Session(engine) as session:
+                db_ticks = session.exec(select(EventRecord.tick)).all()
+                if db_ticks:
+                    self.current_tick = max(db_ticks)
+                    latest_event = session.exec(
+                        select(EventRecord).order_by(EventRecord.timestamp.desc())
+                    ).first()
+                    if latest_event:
+                        self.current_timestamp = latest_event.timestamp
+                else:
+                    self.current_tick = 0
+                    self.current_timestamp = None
+        except Exception:
+            self.current_tick = 0
+            self.current_timestamp = None
 
     def reset(self):
         """Stop playback and clear all runtime database tables."""
@@ -67,7 +87,15 @@ class ReplayManager:
 
         latest_ts = self.current_timestamp
         with Session(engine) as session:
-            # 1. Ingest events for this tick
+            # 1. Clean any existing events for this tick/IDs to ensure idempotence
+            event_ids = [raw["event_id"] for raw in tick_events]
+            if event_ids:
+                session.exec(delete(EventRecord).where(EventRecord.event_id.in_(event_ids)))
+            session.exec(delete(TrendScoreRecord).where(TrendScoreRecord.tick == next_tick))
+            session.exec(delete(NarrativeEventRecord).where(NarrativeEventRecord.tick == next_tick))
+            session.commit()
+
+            # 2. Ingest events for this tick
             for raw in tick_events:
                 eng = raw.get("engagement", {})
                 event_rec = EventRecord(
@@ -99,7 +127,7 @@ class ReplayManager:
 
             session.commit()
 
-            # 2. Recompute trend scores and narrative events for all active topics
+            # 3. Recompute trend scores and narrative events for all active topics
             active_topics = session.exec(
                 select(EventRecord.topic).where(EventRecord.tick <= next_tick).distinct()
             ).all()
@@ -112,7 +140,7 @@ class ReplayManager:
                     current_timestamp=latest_ts or ""
                 )
 
-                # 3. Evaluate Narrative Innovation Layer
+                # 4. Evaluate Narrative Innovation Layer
                 evaluate_narrative_for_topic(
                     session=session,
                     topic=topic,
@@ -137,22 +165,30 @@ class ReplayManager:
         """Continuous ticker background loop."""
         try:
             while self.is_running and not self.is_completed:
+                await asyncio.sleep(self.tick_seconds)
+                if not self.is_running:
+                    break
                 self.step_tick()
                 if self.is_completed:
                     break
-                await asyncio.sleep(self.tick_seconds)
         except asyncio.CancelledError:
             pass
+        except Exception as e:
+            print("Error in replay _run_loop:", e)
         finally:
             self.is_running = False
 
     def start(self):
         """Start or resume background replay loop."""
         if self.is_completed:
-            return
+            self.reset()
         if not self.is_running:
             self.is_running = True
-            self._task = asyncio.create_task(self._run_loop())
+            try:
+                loop = asyncio.get_running_loop()
+                self._task = loop.create_task(self._run_loop())
+            except RuntimeError:
+                self._task = asyncio.create_task(self._run_loop())
 
     def pause(self):
         """Pause playback."""
