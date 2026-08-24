@@ -7,7 +7,6 @@ import { Play, Pause, SkipForward, RotateCcw, Share2, Compass, Radio } from 'luc
 export const NetworkGraph: React.FC = () => {
   const {
     activeTopic,
-    trends,
     replayState,
     startReplay,
     pauseReplay,
@@ -19,14 +18,22 @@ export const NetworkGraph: React.FC = () => {
   const [selectedNode, setSelectedNode] = useState<any>(null);
   const [communities, setCommunities] = useState<any[]>([]);
 
-  const currentTrend = trends.find((t) => t.topic === activeTopic);
-
   useEffect(() => {
     if (activeTopic) {
-      api.getTopicNetwork(activeTopic).then(setGraphData).catch(console.error);
-      api.getTopicCommunities(activeTopic).then(setCommunities).catch(console.error);
+      api.getTopicNetwork(activeTopic)
+        .then((data) => {
+          setGraphData(data);
+          if (data && data.nodes && data.nodes.length > 0 && !selectedNode) {
+            setSelectedNode(data.nodes[0]);
+          }
+        })
+        .catch(console.error);
+
+      api.getTopicCommunities(activeTopic)
+        .then(setCommunities)
+        .catch(console.error);
     }
-  }, [activeTopic, currentTrend?.tick]);
+  }, [activeTopic, replayState?.current_tick]);
 
   return (
     <div className="p-8 space-y-6 max-w-[1600px] mx-auto">
@@ -41,15 +48,15 @@ export const NetworkGraph: React.FC = () => {
           </div>
           <h1 className="font-display font-bold text-4xl text-charcoal-950 tracking-tight mt-1">Information & Network Graph</h1>
           <p className="text-charcoal-600 text-sm mt-1 font-body">
-            Community clusters, influence propagation pathways, and cross-platform bridge nodes.
+            Community clusters, influence propagation pathways, and cross-platform bridge nodes for {activeTopic}.
           </p>
         </div>
         <div className="flex items-center gap-4 font-mono text-xs text-charcoal-700 bg-white/90 px-4 py-2 rounded-xl border border-borderline shadow-sm">
-          <span>NODES: <strong className="text-charcoal-950">{graphData?.stats.total_nodes || 0}</strong></span>
+          <span>NODES: <strong className="text-charcoal-950 font-bold">{graphData?.stats?.total_nodes || 0}</strong></span>
           <span>·</span>
-          <span>EDGES: <strong className="text-charcoal-950">{graphData?.stats.total_edges || 0}</strong></span>
+          <span>EDGES: <strong className="text-charcoal-950 font-bold">{graphData?.stats?.total_edges || 0}</strong></span>
           <span>·</span>
-          <span>CLUSTERS: <strong className="text-brand-amber font-bold">{graphData?.stats.communities_count || 0}</strong></span>
+          <span>CLUSTERS: <strong className="text-brand-amber font-bold">{graphData?.stats?.communities_count || 0}</strong></span>
         </div>
       </div>
 
@@ -69,12 +76,17 @@ export const NetworkGraph: React.FC = () => {
           </div>
 
           {/* SVG Graph View */}
-          <div className="w-full h-[400px] relative flex items-center justify-center bg-pearl/60 rounded-xl border border-borderline my-2 shadow-inner overflow-hidden">
-            {graphData && graphData.nodes.length > 0 ? (
-              <svg className="w-full h-full" viewBox="150 100 600 450">
+          <div className="w-full h-[420px] relative flex items-center justify-center bg-pearl/60 rounded-xl border border-borderline my-2 shadow-inner overflow-hidden">
+            {graphData && graphData.nodes && graphData.nodes.length > 0 ? (
+              <svg className="w-full h-full" viewBox="0 0 840 640">
                 {/* Concentric radar reference circles */}
-                <circle cx="450" cy="325" r="180" fill="none" stroke="#D5CFC5" strokeWidth="1" strokeDasharray="3,3" />
-                <circle cx="450" cy="325" r="100" fill="none" stroke="#D5CFC5" strokeWidth="1" strokeDasharray="3,3" />
+                <circle cx="420" cy="320" r="260" fill="none" stroke="#D5CFC5" strokeWidth="1" strokeDasharray="4,4" />
+                <circle cx="420" cy="320" r="160" fill="none" stroke="#D5CFC5" strokeWidth="1" strokeDasharray="4,4" />
+                <circle cx="420" cy="320" r="70" fill="none" stroke="#D5CFC5" strokeWidth="1" strokeDasharray="4,4" />
+
+                {/* Radar Axis Crosshairs */}
+                <line x1="420" y1="40" x2="420" y2="600" stroke="#E5DFD5" strokeWidth="1" strokeDasharray="2,2" />
+                <line x1="140" y1="320" x2="700" y2="320" stroke="#E5DFD5" strokeWidth="1" strokeDasharray="2,2" />
 
                 {/* Edges */}
                 {graphData.edges.map((edge) => {
@@ -90,9 +102,9 @@ export const NetworkGraph: React.FC = () => {
                       x2={tgtNode.position.x}
                       y2={tgtNode.position.y}
                       stroke="#8C8478"
-                      strokeWidth={edge.style.strokeWidth || 1.5}
-                      strokeDasharray={edge.style.strokeDasharray}
-                      opacity={0.7}
+                      strokeWidth={edge.style?.strokeWidth || 1.5}
+                      strokeDasharray={edge.style?.strokeDasharray}
+                      opacity={0.65}
                     />
                   );
                 })}
@@ -100,7 +112,7 @@ export const NetworkGraph: React.FC = () => {
                 {/* Nodes */}
                 {graphData.nodes.map((node) => {
                   const isSelected = selectedNode?.id === node.id;
-                  const radius = Math.max(10, Math.min(26, (node.data.influence_score / 100) * 22 + 8));
+                  const radius = Math.max(10, Math.min(26, (node.data.influence_score / 100) * 20 + 8));
 
                   return (
                     <g
@@ -116,7 +128,7 @@ export const NetworkGraph: React.FC = () => {
                           r={radius + 6}
                           fill="none"
                           stroke="#C98A0C"
-                          strokeWidth="2"
+                          strokeWidth="2.5"
                           strokeDasharray="4,3"
                         />
                       )}
@@ -126,9 +138,10 @@ export const NetworkGraph: React.FC = () => {
                         cx={node.position.x}
                         cy={node.position.y}
                         r={radius}
-                        fill={node.data.community_color}
-                        stroke={node.data.platform === 'Telegram' ? '#3B5BDB' : '#0F0E0D'}
-                        strokeWidth={isSelected ? '3' : '1.5'}
+                        fill={node.data.community_color || '#3B5BDB'}
+                        stroke={isSelected ? '#0F0E0D' : node.data.platform === 'Telegram' ? '#3B5BDB' : '#0F0E0D'}
+                        strokeWidth={isSelected ? '3.5' : '1.5'}
+                        className="shadow-sm"
                       />
 
                       {/* Author Label */}
@@ -137,11 +150,11 @@ export const NetworkGraph: React.FC = () => {
                         y={node.position.y + radius + 12}
                         textAnchor="middle"
                         fill="#1A1816"
-                        fontSize="9"
+                        fontSize="9.5"
                         fontFamily="IBM Plex Mono"
                         fontWeight="700"
                       >
-                        {node.data.author_name.split(' ')[0]}
+                        {node.data.author_name ? node.data.author_name.split(' ')[0] : node.id}
                       </text>
                     </g>
                   );
@@ -152,7 +165,7 @@ export const NetworkGraph: React.FC = () => {
             )}
           </div>
 
-          {/* Time Scrubber */}
+          {/* Clean Network Timeline Bar */}
           <div className="border-t border-borderline pt-3 flex items-center justify-between font-mono text-xs">
             <div className="flex items-center gap-2">
               <span className="text-charcoal-500 font-bold uppercase">NETWORK TIMELINE:</span>
@@ -189,10 +202,10 @@ export const NetworkGraph: React.FC = () => {
             </div>
             {selectedNode ? (
               <div className="space-y-2.5 font-mono text-xs">
-                <div className="font-display font-bold text-charcoal-950 text-base">{selectedNode.data.author_name}</div>
-                <div className="text-charcoal-600 font-medium">ID: {selectedNode.data.author_id}</div>
-                <div className="text-charcoal-600 font-medium">Platform: {selectedNode.data.platform}</div>
-                <div className="text-charcoal-600 font-medium">Community: {selectedNode.data.community}</div>
+                <div className="font-display font-bold text-charcoal-950 text-base">{selectedNode.data.author_name || selectedNode.id}</div>
+                <div className="text-charcoal-600 font-medium">ID: {selectedNode.data.author_id || selectedNode.id}</div>
+                <div className="text-charcoal-600 font-medium">Platform: {selectedNode.data.platform || 'X'}</div>
+                <div className="text-charcoal-600 font-medium">Community: {selectedNode.data.community || 'General'}</div>
                 <div className="flex justify-between border-t border-borderline pt-2">
                   <span className="text-charcoal-500 font-semibold">Influence Score:</span>
                   <span className="text-brand-amber font-bold text-sm">{selectedNode.data.influence_score}</span>
@@ -215,7 +228,7 @@ export const NetworkGraph: React.FC = () => {
             <div className="pb-2 border-b border-borderline">
               <h3 className="font-display font-bold text-lg text-charcoal-950">Louvain Clusters</h3>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-2 max-h-[220px] overflow-y-auto pr-1">
               {communities.map((comm) => (
                 <div key={comm.community_id} className="bg-pearl/80 p-2.5 rounded-xl border border-borderline text-xs font-mono shadow-sm">
                   <div className="flex items-center gap-2">

@@ -165,17 +165,17 @@ export const api = {
   },
 
   async getTopicNetwork(topic: string): Promise<NetworkGraphData> {
-    const res = await fetch(`${API_BASE}/network/${encodeURIComponent(topic)}`);
+    const res = await fetch(`${API_BASE}/trends/${encodeURIComponent(topic)}/network`);
     return res.json();
   },
 
   async getTopicCommunities(topic: string) {
-    const res = await fetch(`${API_BASE}/network/${encodeURIComponent(topic)}/communities`);
+    const res = await fetch(`${API_BASE}/trends/${encodeURIComponent(topic)}/communities`);
     return res.json();
   },
 
   async getTopicEvents(topic: string) {
-    const res = await fetch(`${API_BASE}/events?topic=${encodeURIComponent(topic)}`);
+    const res = await fetch(`${API_BASE}/trends/${encodeURIComponent(topic)}/events`);
     return res.json();
   },
 
