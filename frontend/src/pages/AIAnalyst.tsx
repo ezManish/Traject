@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useTrajectStore } from '../store/useTrajectStore';
 import { api } from '../api/client';
-import { Bot, Send, ShieldCheck, Sparkles, FileSearch, Loader2 } from 'lucide-react';
+import { Bot, Send, ShieldCheck, Terminal, FileSearch, Loader2 } from 'lucide-react';
 
 export const AIAnalyst: React.FC = () => {
   const { activeTopic, trends } = useTrajectStore();
@@ -65,73 +65,75 @@ export const AIAnalyst: React.FC = () => {
   return (
     <div className="p-8 space-y-6 max-w-[1600px] mx-auto flex flex-col h-[calc(100vh-100px)]">
       {/* Header */}
-      <div className="flex items-baseline justify-between border-b border-borderline pb-5 shrink-0">
+      <div className="flex items-baseline justify-between border-b border-[#262C38] pb-5 shrink-0">
         <div>
-          <div className="flex items-center gap-2 font-mono text-[11px] text-brand-emerald font-bold uppercase tracking-wider">
-            <Sparkles className="w-3.5 h-3.5" />
+          <div className="flex items-center gap-2 font-mono text-[11px] text-[#4ADE80] font-bold uppercase tracking-wider">
+            <Terminal className="w-3.5 h-3.5 text-[#4ADE80]" />
             <span>EXPLAINABLE AI CO-PILOT</span>
-            <span>/</span>
-            <span>ZERO-HALLUCINATION EVIDENCE INFERENCE</span>
+            <span className="text-[#565E6C]">/</span>
+            <span className="text-[#8891A1]">ZERO-HALLUCINATION INFERENCE</span>
           </div>
-          <h1 className="font-display font-bold text-4xl text-charcoal-950 tracking-tight mt-1">AI Intelligence Analyst</h1>
-          <p className="text-charcoal-400 text-sm mt-1 font-body">
+          <h1 className="font-display font-bold text-4xl text-[#E8EAED] tracking-tight mt-1">
+            AI Intelligence Analyst
+          </h1>
+          <p className="text-[#8891A1] text-sm mt-1 font-body">
             Ask complex causal inquiries with strict citation receipts and bounded confidence scoring.
           </p>
         </div>
-        <div className="flex items-center gap-2 font-mono text-xs text-brand-emerald bg-emerald-950/40 px-3.5 py-1.5 rounded-xl border border-emerald-500/30 font-bold shadow-sm">
-          <ShieldCheck className="w-4 h-4 text-brand-emerald" />
+        <div className="flex items-center gap-2 font-mono text-xs text-[#4ADE80] bg-[#12161D] px-3.5 py-1.5 rounded-xl border border-[#4ADE80]/30 font-bold shadow-sm">
+          <ShieldCheck className="w-4 h-4 text-[#4ADE80]" />
           <span>Grounded Policy Active</span>
         </div>
       </div>
 
       {/* Chat Transcript Area */}
-      <div className="flex-1 glass-panel rounded-2xl p-6 overflow-y-auto space-y-4 shadow-glass flex flex-col justify-between">
+      <div className="flex-1 glass-panel rounded-2xl p-6 overflow-y-auto space-y-4 shadow-glass flex flex-col justify-between bg-[#12161D]">
         <div className="space-y-4">
           {messages.map((m, idx) => (
             <div
               key={idx}
               className={`p-5 rounded-2xl max-w-[85%] ${
                 m.role === 'user'
-                  ? 'bg-brand-emerald text-charcoal-950 ml-auto font-mono text-sm font-bold shadow-neon-emerald'
-                  : 'bg-card border border-borderline mr-auto shadow-sm space-y-3'
+                  ? 'bg-[#4ADE80] text-[#0A0D12] ml-auto font-body text-sm font-bold shadow-[0_0_12px_rgba(74,222,128,0.25)]'
+                  : 'bg-[#0A0D12] border border-[#262C38] mr-auto shadow-sm space-y-3'
               }`}
             >
               {m.role === 'assistant' && (
-                <div className="flex items-center justify-between font-mono text-xs text-charcoal-400 pb-2 border-b border-borderline">
+                <div className="flex items-center justify-between font-mono text-xs text-[#565E6C] pb-2 border-b border-[#262C38]">
                   <div className="flex items-center gap-2">
-                    <Bot className="w-4 h-4 text-brand-emerald" />
-                    <span className="font-bold uppercase text-charcoal-950">AI CO-PILOT ANALYSIS</span>
+                    <Bot className="w-4 h-4 text-[#4ADE80]" />
+                    <span className="font-bold uppercase text-[#E8EAED]">AI CO-PILOT ANALYSIS</span>
                   </div>
                   {m.confidence && (
-                    <span className="text-brand-emerald font-bold">CONFIDENCE: {(m.confidence * 100).toFixed(0)}%</span>
+                    <span className="text-[#4ADE80] font-bold">CONFIDENCE: {(m.confidence * 100).toFixed(0)}%</span>
                   )}
                 </div>
               )}
 
-              <p className="font-body text-sm leading-relaxed text-charcoal-900">{m.text}</p>
+              <p className="font-body text-sm leading-relaxed text-[#E8EAED]">{m.text}</p>
 
               {m.evidence && m.evidence.length > 0 && (
-                <div className="font-mono text-xs text-amber-300 bg-amber-950/40 p-2.5 rounded-xl border border-amber-500/30 flex items-center justify-between font-bold">
+                <div className="font-mono text-xs text-[#4ADE80] bg-[#12161D] p-2.5 rounded-xl border border-[#4ADE80]/30 flex items-center justify-between font-bold">
                   <span className="flex items-center gap-1.5">
                     <FileSearch className="w-3.5 h-3.5" />
                     <span>Evidence Receipts: [{m.evidence.join(', ')}]</span>
                   </span>
-                  <span className="text-[10px] text-amber-400 font-semibold">{m.provider}</span>
+                  <span className="text-[10px] text-[#8891A1]">{m.provider}</span>
                 </div>
               )}
             </div>
           ))}
 
           {isLoading && (
-            <div className="bg-card p-4 rounded-2xl border border-borderline font-mono text-xs text-charcoal-300 flex items-center gap-3 shadow-sm mr-auto">
-              <Loader2 className="w-4 h-4 animate-spin text-brand-emerald" />
+            <div className="bg-[#0A0D12] p-4 rounded-xl border border-[#262C38] font-mono text-xs text-[#8891A1] flex items-center gap-3 shadow-sm mr-auto">
+              <Loader2 className="w-4 h-4 animate-spin text-[#4ADE80]" />
               <span>Querying NVIDIA NIM & verifying citation bounds...</span>
             </div>
           )}
         </div>
 
         {/* Input Bar */}
-        <div className="pt-4 border-t border-borderline flex gap-3">
+        <div className="pt-4 border-t border-[#262C38] flex gap-2">
           <input
             type="text"
             value={query}
@@ -139,15 +141,15 @@ export const AIAnalyst: React.FC = () => {
             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
             disabled={isLoading}
             placeholder={`Ask an analytical question about '${activeTopic}' (e.g. Why did this mutate at Tick 4?)...`}
-            className="flex-1 bg-pearl border border-borderline rounded-xl px-4 py-3 text-sm text-charcoal-950 font-body placeholder:text-charcoal-400 focus:outline-none focus:border-brand-emerald font-medium"
+            className="flex-1 bg-[#0A0D12] border border-[#262C38] rounded-xl px-4 py-3 text-sm text-[#E8EAED] font-body placeholder:text-[#565E6C] focus:outline-none focus:border-[#4ADE80] focus:ring-1 focus:ring-[#4ADE80]"
           />
           <button
             onClick={handleSend}
             disabled={isLoading || !query.trim()}
-            className="bg-brand-emerald hover:bg-emerald-400 text-charcoal-950 px-6 py-3 rounded-xl font-mono text-sm font-bold flex items-center gap-2 transition-all disabled:opacity-50 shadow-neon-emerald"
+            className="bg-[#4ADE80] hover:bg-[#22C55E] text-[#0A0D12] font-bold px-6 py-3 rounded-xl text-sm flex items-center gap-2 disabled:opacity-40 transition-all shadow-[0_0_12px_rgba(74,222,128,0.35)]"
           >
-            <span>DISPATCH</span>
-            <Send className="w-4 h-4" />
+            <span>Dispatch Inquiry</span>
+            <Send className="w-3.5 h-3.5" />
           </button>
         </div>
       </div>

@@ -17,37 +17,28 @@ export const TopHeader: React.FC = () => {
     : '2026-08-24 08:15:00 UTC';
 
   return (
-    <header className="h-16 glass-panel px-6 flex items-center justify-between select-none sticky top-0 z-20 border-b border-borderline">
-      {/* Left: Clean Live Timestamp */}
-      <div className="flex items-center gap-3">
-        <div className="flex items-center gap-2.5 font-mono text-xs bg-pearl/90 px-3.5 py-1.5 rounded-lg border border-borderline shadow-sm">
-          <span className="relative flex h-2.5 w-2.5">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-emerald opacity-75" />
-            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-brand-emerald shadow-neon-emerald" />
-          </span>
-          <span className="font-bold text-charcoal-950 uppercase tracking-tight text-[11px]">
-            Live Stream
-          </span>
-          <span className="text-charcoal-400">/</span>
-          <span className="text-charcoal-400 font-semibold text-[11px]">{currentTimestamp}</span>
-        </div>
+    <header className="h-12 px-6 flex items-center justify-between select-none sticky top-0 z-20 border-b border-[#262C38]/60 bg-[#12161D]/80 backdrop-blur-sm">
+      {/* Left: Discreet Timestamp */}
+      <div className="flex items-center gap-2 font-mono text-[10.5px] text-[#565E6C]">
+        <span className="w-1.5 h-1.5 rounded-full bg-[#4ADE80]/80" />
+        <span className="text-[#8891A1]">{currentTimestamp}</span>
       </div>
 
-      {/* Right: Clean Playback Controls */}
-      <div className="flex items-center gap-1 bg-card border border-borderline p-1 rounded-xl shadow-sm">
+      {/* Right: Ultra-Minimal Ghost Controls */}
+      <div className="flex items-center gap-1 text-[#565E6C]">
         {isRunning ? (
           <button
             onClick={pauseReplay}
-            title="Pause Stream"
-            className="p-2 bg-brand-crimson text-white rounded-lg hover:bg-red-600 transition-colors shadow-neon-crimson"
+            title="Pause"
+            className="p-1.5 hover:text-[#FF4D4D] transition-colors rounded"
           >
             <Pause className="w-3.5 h-3.5" />
           </button>
         ) : (
           <button
             onClick={startReplay}
-            title="Start Stream"
-            className="p-2 bg-brand-emerald text-charcoal-950 hover:bg-emerald-400 rounded-lg transition-colors font-bold shadow-neon-emerald"
+            title="Stream"
+            className="p-1.5 hover:text-[#E8EAED] transition-colors rounded"
           >
             <Play className="w-3.5 h-3.5 fill-current" />
           </button>
@@ -55,16 +46,16 @@ export const TopHeader: React.FC = () => {
 
         <button
           onClick={stepTick}
-          title="Step Forward"
-          className="p-2 hover:bg-white/10 text-charcoal-300 hover:text-white rounded-lg transition-colors"
+          title="Step Forward (1 Tick)"
+          className="p-1.5 hover:text-[#E8EAED] transition-colors rounded"
         >
           <SkipForward className="w-3.5 h-3.5" />
         </button>
 
         <button
           onClick={resetReplay}
-          title="Reset Stream"
-          className="p-2 hover:bg-white/10 text-charcoal-400 hover:text-brand-crimson rounded-lg transition-colors"
+          title="Reset"
+          className="p-1.5 hover:text-[#E8EAED] transition-colors rounded"
         >
           <RotateCcw className="w-3.5 h-3.5" />
         </button>
