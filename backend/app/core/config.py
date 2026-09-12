@@ -64,8 +64,15 @@ class APISettings:
         self.api_port: int = int(os.getenv("API_PORT", "8000"))
         self.api_prefix: str = os.getenv("API_PREFIX", "/api/v1")
         
-        raw_origins = os.getenv("API_CORS_ORIGINS", "http://localhost:3000,http://localhost:5173,http://127.0.0.1:3000,http://127.0.0.1:5173")
+        raw_origins = os.getenv(
+            "API_CORS_ORIGINS",
+            "http://localhost:3000,http://localhost:3001,http://localhost:5173,http://localhost:5174,http://127.0.0.1:3000,http://127.0.0.1:3001,http://127.0.0.1:5173,http://127.0.0.1:5174",
+        )
         self.api_cors_origins: list[str] = [o.strip() for o in raw_origins.split(",") if o.strip()]
+        self.api_cors_origin_regex: str = os.getenv(
+            "API_CORS_ORIGIN_REGEX",
+            r"^https?://(localhost|127\.0\.0\.1)(:\d+)?$",
+        )
         
         self.data_raw_dir: str = os.getenv("DATA_RAW_DIR", "./data/raw")
         self.data_processed_dir: str = os.getenv("DATA_PROCESSED_DIR", "./data/processed")
